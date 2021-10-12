@@ -1,10 +1,14 @@
+import {Loader as PixiLoader} from "pixi.js"
 import { ResourceLoader } from "./loader"
-import mock from "./mock.json"
-import mock1 from "./mock1.json"
-import mock2 from "./mock2.json"
-import pikachuMock from "./pikachuMock.json"
-import charmanderMock from "./charmanderMock.json"
-import pixiMock from "./pixiMock.json"
+import mock from "./__fixtures__/mock.json"
+import mock1 from "./__fixtures__/mock1.json"
+import mock2 from "./__fixtures__/mock2.json"
+import pikachuMock from "./__fixtures__/pikachuMock.json"
+import charmanderMock from "./__fixtures__/charmanderMock.json"
+import pixiMock from "./__fixtures__/pixiMock.json"
+
+// Uncomment when running the last unit test
+// import {pixijsMock} from "./__fixtures__/pixijsmock"
 
 // @ts-ignore
 global.fetch = jest.fn()
@@ -36,7 +40,7 @@ describe("Promise", () => {
 
   afterEach(() => {
     jest.clearAllMocks()
-    console.log(loader.loader.resources)
+    console.log(PixiLoader.shared.resources)
   })
 
   it("should pass without using pixijs loader", () => {
@@ -56,4 +60,14 @@ describe("Promise", () => {
         expect(Object.values(loader.loader.resources).length).toBe(2)
       })
   })
+
+  // This test fails when doing a regular javascript import
+  // it("pixijs resource loader should correctly exit", (done) => {
+  //   const loader = PixiLoader.shared
+  //   loader.add(pixijsMock)
+  //     .load(() => {
+  //       console.log(loader.resources)
+  //       done()
+  //     })
+  // })
 })
