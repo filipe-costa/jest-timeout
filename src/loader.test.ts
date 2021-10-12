@@ -36,6 +36,7 @@ describe("Promise", () => {
 
   afterEach(() => {
     jest.clearAllMocks()
+    console.log(loader.loader.resources)
   })
 
   it("should pass without using pixijs loader", () => {
@@ -49,6 +50,7 @@ describe("Promise", () => {
   })
 
   it("should pass using pixijs loader", () => {
+    console.log(('XMLHttpRequest' in window))
     return loader.pixiLoad()
       .then(() => {
         expect(Object.values(loader.loader.resources).length).toBe(2)
