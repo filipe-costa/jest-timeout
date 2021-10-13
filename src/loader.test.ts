@@ -8,7 +8,7 @@ import charmanderMock from "./__fixtures__/charmanderMock.json"
 import pixiMock from "./__fixtures__/pixiMock.json"
 
 // Uncomment when running the last unit test
-// import {pixijsMock} from "./__fixtures__/pixijsmock"
+import {pixijsMock} from "./__fixtures__/pixijsmock"
 
 // @ts-ignore
 global.fetch = jest.fn()
@@ -16,22 +16,22 @@ global.fetch = jest.fn()
 describe("Promise", () => {
   const loader = new ResourceLoader()
 
-  beforeEach(() => {
+  beforeAll(() => {
     // @ts-ignore
     global.fetch.mockImplementation((url) => {
       switch(url) {
         case "resources/mock.json":
-          return Promise.resolve({json: () => mock})
+          return Promise.resolve({json: () => Promise.resolve(mock)})
         case "resources/mock1.json":
-          return Promise.resolve({json: () => mock1})
+          return Promise.resolve({json: () => Promise.resolve(mock1)})
         case "resources/mock2.json":
-          return Promise.resolve({json: () => mock2})
+          return Promise.resolve({json: () => Promise.resolve(mock2)})
         case "resources/pixiMock.json":
-          return Promise.resolve({json: () => pixiMock})
+          return Promise.resolve({json: () => Promise.resolve(pixiMock)})
         case "resources/charmanderMock.json":
-          return Promise.resolve({json: () => charmanderMock})
+          return Promise.resolve({json: () => Promise.resolve(charmanderMock)})
         case "resources/pikachuMock.json":
-          return Promise.resolve({json: () => pikachuMock})
+          return Promise.resolve({json: () => Promise.resolve(pikachuMock)})
         default:
           console.log("oopsie")
       }
@@ -40,7 +40,7 @@ describe("Promise", () => {
 
   afterEach(() => {
     jest.clearAllMocks()
-    console.log(PixiLoader.shared.resources)
+    console.log(loader.loader.resources)
   })
 
   it("should pass without using pixijs loader", () => {
@@ -54,7 +54,6 @@ describe("Promise", () => {
   })
 
   it("should pass using pixijs loader", () => {
-    console.log(('XMLHttpRequest' in window))
     return loader.pixiLoad()
       .then(() => {
         expect(Object.values(loader.loader.resources).length).toBe(2)
@@ -62,12 +61,12 @@ describe("Promise", () => {
   })
 
   // This test fails when doing a regular javascript import
-  // it("pixijs resource loader should correctly exit", (done) => {
-  //   const loader = PixiLoader.shared
-  //   loader.add(pixijsMock)
-  //     .load(() => {
-  //       console.log(loader.resources)
-  //       done()
-  //     })
-  // })
+  it("pixijs resource loader should correctly exit", (done) => {
+    const loader = PixiLoader.shared
+    loader.add(pixijsMock)
+      .load(() => {
+        console.log(loader.resources)
+        done()
+      })
+  })
 })
